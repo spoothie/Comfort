@@ -1,0 +1,20 @@
+name: Comfort
+version: 1.0
+description: Let players sit and lay down on blocks.
+author: spoothie
+main: net.spoothie.comfort.Comfort
+commands:
+    comfort:
+        description: Reloads the Comfort configuration file.
+        permission: comfort.reload
+        usage: /<command> reload
+permissions:
+    comfort.*:
+        description: Gives access to all Comfort features and commands.
+        children:
+            comfort.reload: true
+            comfort.sit: true
+    comfort.reload:
+        description: Allows you to reload the Comfort configuration file.
+    comfort.sit:
+        description: Allows you to sit on Comfort seats.
