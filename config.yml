@@ -13,5 +13,9 @@
 # ------
 blocks:
     WOOD_STAIRS: 0.5
+    COBBLESTONE_STAIRS: 0.5
+    BRICK_STAIRS: 0.5
+    SMOOTH_STAIRS: 0.5
+    NETHER_BRICK_STAIRS: 0.5
 sneaking: true
 distance: 2
