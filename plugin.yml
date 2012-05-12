@@ -3,6 +3,7 @@ version: 1.0
 description: Let players sit and lay down on blocks.
 author: spoothie
 main: net.spoothie.comfort.Comfort
+softdepend: [Spout]
 commands:
     comfort:
         description: Reloads the Comfort configuration file.

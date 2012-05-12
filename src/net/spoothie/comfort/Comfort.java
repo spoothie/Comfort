@@ -15,6 +15,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.getspout.spoutapi.block.SpoutBlock;
 
 public class Comfort extends JavaPlugin {
 		
@@ -26,7 +27,7 @@ public class Comfort extends JavaPlugin {
 	
 		public HashMap<Player, Block> comfortPlayers = new HashMap<Player, Block>();
 		public HashMap<String, Double> comfortBlocks = new HashMap<String, Double>();
-		public boolean sneaking;
+		public boolean sneaking, useSpout;
 		public double distance;
 		
 		private File pluginFolder;
@@ -41,6 +42,11 @@ public class Comfort extends JavaPlugin {
 	        loadConfig();      
 			EventListener eventListener = new EventListener(this);
 			getServer().getPluginManager().registerEvents(eventListener, this);
+			
+			if(getServer().getPluginManager().getPlugin("Spout") != null)
+				useSpout = true;
+			else
+				useSpout = false;
 		}
 		
 		@Override
@@ -73,8 +79,12 @@ public class Comfort extends JavaPlugin {
 			sneaking = getConfig().getBoolean("sneaking");
 			distance = getConfig().getDouble("distance");
 
-			for(String type : getConfig().getConfigurationSection("blocks").getKeys(true))
+			for(String type : getConfig().getConfigurationSection("blocks").getKeys(true)) {
+				if(!type.contains(":"))
+					comfortBlocks.put(type + ":" + 0, getConfig().getDouble("blocks." + type));
+				
 				comfortBlocks.put(type, getConfig().getDouble("blocks." + type));
+			}
 		}
 
 		@Override public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -97,7 +107,6 @@ public class Comfort extends JavaPlugin {
 		public void sitDown(Player player, Block block) {
 			player.setAllowFlight(true);
 			player.setFlying(true);
-			player.sendMessage(String.valueOf(comfortBlocks.get(getTypeString(block))));
 			player.teleport(block.getLocation().add(0.5, comfortBlocks.get(getTypeString(block)) - 0.5, 0.5));		
 			Packet40EntityMetadata packet = new Packet40EntityMetadata(player.getEntityId(), new ComfortDataWatcher((byte) 0x04));
 			
@@ -141,9 +150,9 @@ public class Comfort extends JavaPlugin {
 		}
 		
 		public String getTypeString(Block block) {
-			if(block.getData() != 0)
+			if(useSpout && ((SpoutBlock)block).isCustomBlock())
+				return (318 + ":" + ((SpoutBlock)block).getCustomBlockId());
+			else
 				return (block.getTypeId() + ":" + block.getData());
-			
-			return (String.valueOf(block.getTypeId())); 
 		}
 }
