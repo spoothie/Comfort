@@ -1,21 +1,20 @@
 # Configuration of the 'Comfort' plugin for Craftbukkit
 # ------
-# A list of all compatible Minecraft block and item names: http://bit.ly/AmJgMb.
 # A list of all compatible Minecraft block and item IDs: http://bit.ly/akHPL2
 # ------
-# blocks: Set the blocks you want to be able to sit down on and their sitting-height . You can either use the block's name or ID (see links above). Example:
-# Block-ID/Block-name: sitting-height
-# WOOD_STAIRS: 0.5
-# 67: 0.7 
+# blocks: Set the blocks you want to be able to sit down on and their sitting-height . You have to use the IDs (and sub-IDs if wanted) of the blocks. Example:
+# Block-ID(:Block-sub-ID): sitting-height
+# 53: 0.5
+# 44:2: 0.3
 # ------
 # sneaking: If set to true, you have to sneak and rightclick to sit down on a seat.
 # distance: The maximum distance between the seat (the center of the block) and the player to be able to sit down (to prevent glitching through walls, etc.).
 # ------
 blocks:
-    WOOD_STAIRS: 0.5
-    COBBLESTONE_STAIRS: 0.5
-    BRICK_STAIRS: 0.5
-    SMOOTH_STAIRS: 0.5
-    NETHER_BRICK_STAIRS: 0.5
+    '53': 0.5
+    '67': 0.5
+    '108': 0.5
+    '109': 0.5
+    '114': 0.5
 sneaking: true
 distance: 2

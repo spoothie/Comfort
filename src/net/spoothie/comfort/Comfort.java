@@ -2,13 +2,13 @@ package net.spoothie.comfort;
 
 import java.io.File;
 import java.util.HashMap;
+
 import net.minecraft.server.Packet40EntityMetadata;
 
 import net.spoothie.comfort.ComfortDataWatcher;
 import net.spoothie.comfort.EventListener;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -18,14 +18,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Comfort extends JavaPlugin {
 		
-		// TODO:
+		// To do:
 		// Laying down
 		// Healing while sitting/laying
 		// Piston moving?
 		// NPC sitting/laying?
 	
 		public HashMap<Player, Block> comfortPlayers = new HashMap<Player, Block>();
-		public HashMap<Material, Double> comfortBlocks = new HashMap<Material, Double>();
+		public HashMap<String, Double> comfortBlocks = new HashMap<String, Double>();
 		public boolean sneaking;
 		public double distance;
 		
@@ -74,7 +74,7 @@ public class Comfort extends JavaPlugin {
 			distance = getConfig().getDouble("distance");
 
 			for(String type : getConfig().getConfigurationSection("blocks").getKeys(true))
-				comfortBlocks.put(Material.getMaterial(type), getConfig().getDouble("blocks." + type));
+				comfortBlocks.put(type, getConfig().getDouble("blocks." + type));
 		}
 
 		@Override public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -97,9 +97,7 @@ public class Comfort extends JavaPlugin {
 		public void sitDown(Player player, Block block) {
 			player.setAllowFlight(true);
 			player.setFlying(true);
-			player.teleport(block.getLocation().add(0.5, comfortBlocks.get(block.getType()) - 0.5, 0.5));
-			/*EntityPlayer entityPlayer = ((CraftPlayer)player).getHandle();
-			Packet17EntityLocationAction packet = new Packet17EntityLocationAction(entityPlayer, 0, block.getX(), block.getY(), block.getZ());*/		
+			player.teleport(block.getLocation().add(0.5, comfortBlocks.get(getTypeString(block)) - 0.5, 0.5));		
 			Packet40EntityMetadata packet = new Packet40EntityMetadata(player.getEntityId(), new ComfortDataWatcher((byte) 0x04));
 			
 			for(Player p : getServer().getOnlinePlayers())
@@ -139,5 +137,12 @@ public class Comfort extends JavaPlugin {
 
 			comfortPlayers.remove(player);
 			player.setSneaking(false);
+		}
+		
+		public String getTypeString(Block block) {
+			if(block.getData() != 0)
+				return (block.getTypeId() + ":" + block.getData());
+			
+			return (String.valueOf(block.getTypeId())); 
 		}
 }

@@ -38,9 +38,9 @@ public class EventListener implements Listener {
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		if(event.hasBlock() && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Block block = event.getClickedBlock();
-			
-			if(plugin.comfortBlocks.containsKey(block.getType())) {
-				Player player = event.getPlayer();				
+
+			if(plugin.comfortBlocks.containsKey(plugin.getTypeString(block))) {
+				Player player = event.getPlayer();
 				
 				// Permissions check.
 				if(!player.hasPermission("comfort.sit"))
@@ -122,8 +122,10 @@ public class EventListener implements Listener {
 	// Let players stand up on teleport.
 	@EventHandler
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
+		Block block = event.getTo().getBlock();
+		
 		if(event.getCause() != TeleportCause.UNKNOWN && plugin.comfortPlayers.containsKey(event.getPlayer())) {
-			if(!plugin.comfortBlocks.containsKey(event.getTo().getBlock()))
+			if(!plugin.comfortBlocks.containsKey(plugin.getTypeString(block)))
 				plugin.standUp(event.getPlayer());
 		}
 	}
