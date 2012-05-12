@@ -37,7 +37,6 @@ public class Comfort extends JavaPlugin {
 			pluginFolder = getDataFolder();
 			configFile = new File(pluginFolder, "config.yml");
 			createConfig();
-			this.getConfig().options().copyDefaults(true);
 	        saveConfig();
 	        loadConfig();      
 			EventListener eventListener = new EventListener(this);
@@ -62,6 +61,7 @@ public class Comfort extends JavaPlugin {
 			if(!configFile.exists()) {
 				try {
 					configFile.createNewFile();
+					getConfig().options().copyDefaults(true);
 				}
 				catch(Exception e) {
 					e.printStackTrace();
@@ -97,6 +97,7 @@ public class Comfort extends JavaPlugin {
 		public void sitDown(Player player, Block block) {
 			player.setAllowFlight(true);
 			player.setFlying(true);
+			player.sendMessage(String.valueOf(comfortBlocks.get(getTypeString(block))));
 			player.teleport(block.getLocation().add(0.5, comfortBlocks.get(getTypeString(block)) - 0.5, 0.5));		
 			Packet40EntityMetadata packet = new Packet40EntityMetadata(player.getEntityId(), new ComfortDataWatcher((byte) 0x04));
 			
